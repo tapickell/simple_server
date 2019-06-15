@@ -97,7 +97,8 @@ defmodule SimpleServer.WebServer do
 
   defp process_request(conn) do
     Logger.warn("REQUEST:=> #{inspect(conn)}")
-    {:ok, {200, "Thank you", %{}}}
+    response = build_respponse({200, "OK", "{}"})
+    {:ok, response}
   end
 
   defp read_raw_data(socket, conn) do
@@ -120,11 +121,21 @@ defmodule SimpleServer.WebServer do
     :gen_tcp.recv(socket, size)
   end
 
-  defp send_response(socket, {code, message, data}) do
-    # unsure of response format need to check this to be proper
-    # possibly this could be a response struct that gets built out
-    # and then returned line by line
-    :ok = write_line(socket, "#{code} #{message} #{inspect(data)}\r\n ")
+  defp build_respponse({code, message, body}) do
+    length = byte_size(body) + 1
+    """
+    HTTP/1.1 #{code} #{message}\r
+    Content-Type: application/json\r
+    Content-Length: #{length}\r
+    Date: #{DateTime.utc_now() |> DateTime.to_iso8601()}\r
+    Access-Control-Allow-Origin: *\r
+    Access-Control-Allow-Credentials: true\r
+    \r\n#{body}
+    """ |> IO.inspect(label: "response")
+  end
+
+  defp send_response(socket, response) do
+    :ok = write_line(socket, response)
   end
 
   defp write_line(socket, {:ok, line}) do
