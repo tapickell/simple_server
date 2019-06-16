@@ -1,5 +1,6 @@
 * Simple Server
-** TODO Accept requests on port 80
+** DONE Accept requests on port ??
+   CLOSED: [2019-06-16 Sun 08:43]
 ** TODO Handle routing for endpoints
 *** TODO hello_world endpoint
 *** TODO documents endpoint
@@ -21,20 +22,10 @@
 
 *** TODO Curl json examples
 *** curl -v -H 'Content-Type: application/json' "http://localhost:4040/post" -d '{"data": "Heya"}'
-**** received
-    opts_a = [:binary, packet: :line, active: false, reuseaddr: true]
-22:49:37.413 [warn]  read_line => "POST /post HTTP/1.1\r\n"
-22:49:37.415 [warn]  read_line => "Host: localhost:4040\r\n"
-22:49:37.415 [warn]  read_line => "User-Agent: curl/7.64.1\r\n"
-22:49:37.415 [warn]  read_line => "Accept: */*\r\n"
-22:49:37.415 [warn]  read_line => "Content-Type: application/json\r\n"
-22:49:37.415 [warn]  read_line => "Content-Length: 16\r\n"
-22:49:37.415 [warn]  read_line => "\r\n"
-**** Where is the json data ??
-**** ending of curl => "\r\n" ?? maybe should test GET
-**** are these all strings bc of the settings for gen_tcp?
-   Match on the messages to create request data structure
-   once ending is rcvd return full data structure for processing
+**** DONE Match on the messages to create request data structure
+     CLOSED: [2019-06-16 Sun 08:42]
+**** DONE Once ending is rcvd return full data structure for processing
+     CLOSED: [2019-06-16 Sun 08:42]
 
     opts_c = [:binary, packet: :http, active: false, reuseaddr: true]
 09:00:51.661 [warn]  read_line => {:http_request, :POST, {:abs_path, '/post'}, {1, 1}}
@@ -44,3 +35,4 @@
 09:00:51.662 [warn]  read_line => {:http_header, 42, :"Content-Type", :undefined, 'application/json'}
 09:00:51.662 [warn]  read_line => {:http_header, 38, :"Content-Length", :undefined, '16'}
 09:00:51.662 [warn]  read_line => :http_eoh
+**** TODO Handle content types, using them to determine how to process body

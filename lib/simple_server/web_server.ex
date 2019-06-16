@@ -1,4 +1,6 @@
 defmodule SimpleServer.WebServer do
+  alias SimpleServer.Conn
+
   require Logger
 
   @opts [:binary, packet: :http, active: false, reuseaddr: true]
@@ -8,17 +10,6 @@ defmodule SimpleServer.WebServer do
     {:ok, socket} = :gen_tcp.listen(port, @opts)
     Logger.info("Accepting connections on port #{port}")
     loop(socket)
-  end
-
-  defmodule Conn do
-    defstruct accept: nil,
-              action: nil,
-              body: nil,
-              content_length: nil,
-              content_type: nil,
-              host: nil,
-              path: nil,
-              user_agent: nil
   end
 
   defp loop(socket) do
