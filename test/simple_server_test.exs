@@ -4,18 +4,21 @@ defmodule SimpleServerTest do
 
   @moduletag :capture_log
 
-  @test_url 'http://localhost:4040'
-
-  @c_type 'content-type'
-  @json_type 'application/json'
-  @text_type 'text/plain'
-
   @test_json '{\"data\": \"Hello World\"}'
+  @c_type "content-type"
+  @json_type "application/json"
 
+  defmodule TestServer do
+    use Tesla
+    plug Tesla.Middleware.BaseUrl, "http://localhost:4040"
 
-  setup_all do
-    {:ok, [:inets]} = Application.ensure_all_started(:inets)
-    :ok
+    def hello_world() do
+      get("/helloworld")
+    end
+
+    def post(data) do
+      post("/post", data, headers: [{@c_type, @json_type}])
+    end
   end
 
   setup do
@@ -23,18 +26,15 @@ defmodule SimpleServerTest do
     :ok = Application.start(:simple_server)
   end
 
-  test "GET /hello_world request" do
-    uri = @test_url ++ '/helloworld'
-    {:ok, result} = :httpc.request(uri)
-    assert result == []
-  end
-
-  # test "JSON POST request with data" do
-  #   uri = @test_url ++ '/post'
-  #   {:ok, {{_v, code, _p}, resp_h, body}} = :httpc.request(:post, {uri, [], @json_type, @test_json}, [], [])
-  #   assert code == 404
-  #   assert List.keyfind(resp_h, @c_type, 0) == {@c_type, @json_type}
-  #   assert body == []
+  # test "GET /hello_world request" do
+  #   {:ok, response} = TestServer.hello_world()
+  #   assert response == []
   # end
 
+  test "JSON POST request with data" do
+    {:ok, response} = TestServer.post(@test_json)
+    assert response.status == 404
+    assert List.keyfind(response.headers, @c_type, 0) == {@c_type, @json_type}
+    assert response.body == []
+  end
 end
