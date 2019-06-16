@@ -2,11 +2,19 @@ defmodule SimpleServer.RequestHandler do
 
   require Logger
 
-  def process_request(conn) do
+  def process_request(%{action: action, path: path} = conn) do
     Logger.warn("REQUEST:=> #{inspect(conn)}")
-    # route request to endpoint by action and path
-    response = build_respponse({200, "OK", "{}"})
-    {:ok, response}
+    route(path, action, conn)
+  end
+
+  defp route('/hello_world' = path, :GET = action, conn) do
+    Logger.warn("Route for #{path} : #{action} called")
+    {:ok, build_respponse({200, "OK", "Hello World!"})}
+  end
+
+  defp route(path, action, conn) do
+    Logger.warn("Route for #{path} : #{action} called")
+    {:ok, build_respponse({404, "NOT FOUND", ""})}
   end
 
   # TODO this should be in a different module
