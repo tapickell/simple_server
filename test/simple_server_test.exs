@@ -3,12 +3,11 @@ defmodule SimpleServerTest do
 
   alias SimpleServer.MimeType
 
-  @moduletag :capture_log
-
-  @test_json '{\"data\": \"Hello World\"}'
-
   defmodule ServerClient do
     use Tesla
+
+    alias SimpleServer.MimeType
+
     plug Tesla.Middleware.BaseUrl, "http://localhost:4040"
 
     def hello_world() do
@@ -23,6 +22,11 @@ defmodule SimpleServerTest do
       post("/documents/" <> slug, data, headers: [{MimeType.content, MimeType.jpeg}])
     end
   end
+
+  @moduletag :capture_log
+
+  @test_json '{\"data\": \"Hello World\"}'
+
 
   test "GET /hello_world request" do
     {:ok, response} = ServerClient.hello_world()
