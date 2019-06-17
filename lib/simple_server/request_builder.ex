@@ -40,6 +40,11 @@ defmodule SimpleServer.RequestBuilder do
     {:ok, %{conn | complete: true}}
   end
 
+  def parse_line(socket, %{content_length: 0} = conn, :http_eoh) do
+    Logger.warn("end of header No Content => #{inspect(conn)}")
+    {:ok, %{conn | complete: true}}
+  end
+
   def parse_line(socket, conn, :http_eoh) do
     Logger.warn("end of header => #{inspect(conn)}")
     size = conn.content_length

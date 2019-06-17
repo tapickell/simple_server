@@ -2,17 +2,24 @@ defmodule SimpleServer.Tcp do
 
   require Logger
 
-  @opts_http [:binary, packet: :http, active: false, reuseaddr: true]
-  @opts_raw [:binary, packet: :raw, active: false, reuseaddr: true]
+  @opts_listen [:binary, packet: :http, backlog: 120, active: false, reuseaddr: true]
+  @opts_http [packet: :http]
+  @opts_raw [packet: :raw]
 
   def listen(port, :http) do
     Logger.info("Tcp.listen")
-    :gen_tcp.listen(port, @opts_http)
+    :gen_tcp.listen(port, @opts_listen)
   end
 
   def accept(socket) do
     Logger.info("Tcp.accept")
-    :gen_tcp.accept(socket)
+    with {:ok, client} <- :gen_tcp.accept(socket) do
+      {:ok, client}
+    else
+      {:error, error} ->
+        Logger.error(":gen_tcp.accept error #{inspect(error)}")
+        {:ok, socket}
+    end
   end
 
   def controlling_process(socket, pid) do

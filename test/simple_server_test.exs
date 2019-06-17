@@ -1,6 +1,5 @@
 defmodule SimpleServerTest do
   use ExUnit.Case, async: false
-  # doctest SimpleServer
 
   @moduletag :capture_log
 
@@ -19,22 +18,23 @@ defmodule SimpleServerTest do
     def post(data) do
       post("/post", data, headers: [{@c_type, @json_type}])
     end
+
   end
 
-  setup do
-    Application.stop(:simple_server)
-    :ok = Application.start(:simple_server)
+  setup_all do
+    # Application.stop(:simple_server)
+    # :ok = Application.start(:simple_server)
+    :ok
   end
 
-  # test "GET /hello_world request" do
-  #   {:ok, response} = TestServer.hello_world()
-  #   assert response == []
-  # end
+  test "GET /hello_world request" do
+    {:ok, response} = TestServer.hello_world()
+    assert response == []
+  end
 
   test "JSON POST request with data" do
     {:ok, response} = TestServer.post(@test_json)
     assert response.status == 404
     assert List.keyfind(response.headers, @c_type, 0) == {@c_type, @json_type}
-    assert response.body == []
   end
 end

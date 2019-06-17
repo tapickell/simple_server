@@ -7,7 +7,7 @@ defmodule SimpleServer.RequestHandler do
     route(path, action, conn)
   end
 
-  defp route('/hello_world' = path, :GET = action, conn) do
+  defp route('/helloworld' = path, :GET = action, conn) do
     Logger.warn("Route for #{path} : #{action} called")
     {:ok, build_respponse({200, "OK", "Hello World!"})}
   end
