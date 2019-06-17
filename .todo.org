@@ -2,7 +2,8 @@
 ** DONE Accept requests on port ??
    CLOSED: [2019-06-16 Sun 08:43]
 ** TODO Handle routing for endpoints
-*** TODO hello_world endpoint
+*** DONE hello_world endpoint
+    CLOSED: [2019-06-16 Sun 19:32]
 *** TODO documents endpoint
 **** Path ends with the document slug (e.g., /documents/my-document)
 ** TODO Handle actions on paths
