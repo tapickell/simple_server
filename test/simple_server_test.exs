@@ -1,12 +1,11 @@
 defmodule SimpleServerTest do
   use ExUnit.Case, async: false
 
+  alias SimpleServer.MimeType
+
   @moduletag :capture_log
 
   @test_json '{\"data\": \"Hello World\"}'
-  @c_type "content-type"
-  @json_type "application/json"
-  @text_type "text/plain"
 
   defmodule ServerClient do
     use Tesla
@@ -17,7 +16,11 @@ defmodule SimpleServerTest do
     end
 
     def post(data) do
-      post("/post", data, headers: [{@c_type, @json_type}])
+      post("/post", data, headers: [{MimeType.content, MimeType.json}])
+    end
+
+    def document_create(:jpeg, slug, data) do
+      post("/documents/" <> slug, data, headers: [{MimeType.content, MimeType.jpeg}])
     end
   end
 
@@ -25,12 +28,20 @@ defmodule SimpleServerTest do
     {:ok, response} = ServerClient.hello_world()
     assert response.status == 200
     assert response.body == "Hello World!\n"
-    assert List.keyfind(response.headers, @c_type, 0) == {@c_type, @text_type}
+    assert List.keyfind(response.headers, MimeType.content, 0) ==  {MimeType.content, MimeType.text}
   end
 
   test "JSON POST request with data" do
     {:ok, response} = ServerClient.post(@test_json)
-    assert response.status == 404
-    assert List.keyfind(response.headers, @c_type, 0) == {@c_type, @json_type}
+    assert response.status == 201
+    assert List.keyfind(response.headers, MimeType.content, 0) ==  {MimeType.content, MimeType.json}
+  end
+
+  test "POST documents request with doc" do
+    file = "static/You_Must_Be_New.jpg"
+    slug = "you-must-be-new"
+    {:ok, response} = ServerClient.document_create(:jpeg, slug, file)
+    assert response.status == 201
+    assert List.keyfind(response.headers, MimeType.content, 0) ==  {MimeType.content, MimeType.json}
   end
 end

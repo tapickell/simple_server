@@ -1,16 +1,9 @@
 defmodule SimpleServer.RequestHandler do
-
-  defmodule SimpleServer.Static do
-    def hello_world(), do: {:ok, "Hello World!"}
-  end
   alias SimpleServer.Static
+  alias SimpleServer.MimeType
   alias FileService.Document
 
-
   require Logger
-
-  @text_type "text/plain"
-  @json_type "application/json"
 
   def process_request(%{action: action, path: path} = conn) do
     Logger.warn("REQUEST:=> #{inspect(conn)}")
@@ -19,17 +12,22 @@ defmodule SimpleServer.RequestHandler do
 
   defp route('/hello_world', :GET, conn) do
     {:ok, response} = Static.hello_world()
-    {:ok, build_respponse({200, "OK", @text_type, response})}
+    {:ok, build_respponse({200, "OK", MimeType.text, response})}
   end
 
-  defp route('/documents', :POST, conn) do
-    {:ok, response} = Document.store(conn.data)
-    {:ok, build_respponse({201, "Created", @text_type, response})}
+  defp route('/documents' ++ doc_slug, :POST, conn) do
+    {:ok, response} = Document.store(conn.data, conn.content_type, doc_slug)
+    {:ok, build_respponse({201, "Created", MimeType.text, response})}
+  end
+
+  defp route('/post', :POST, conn) do
+    response = "{}"
+    {:ok, build_respponse({201, "Created", MimeType.json, response})}
   end
 
   defp route(path, action, conn) do
     Logger.warn("404 :: Route for #{path} : #{action} called")
-    {:ok, build_respponse({404, "NOT FOUND", @json_type, ""})}
+    {:ok, build_respponse({404, "NOT FOUND", MimeType.json, ""})}
   end
 
   # TODO this should be in a different module
