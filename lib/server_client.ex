@@ -4,6 +4,7 @@ defmodule SimpleServer.ServerClient do
   alias SimpleServer.MimeType
 
   plug Tesla.Middleware.BaseUrl, "http://localhost:4040"
+  plug Tesla.Middleware.Logger
 
   def hello_world() do
     get("/hello_world")

@@ -2,28 +2,9 @@ defmodule SimpleServerTest do
   use ExUnit.Case, async: false
 
   alias SimpleServer.MimeType
+  alias SimpleServer.ServerClient
 
-  defmodule ServerClient do
-    use Tesla
-
-    alias SimpleServer.MimeType
-
-    plug Tesla.Middleware.BaseUrl, "http://localhost:4040"
-
-    def hello_world() do
-      get("/hello_world")
-    end
-
-    def post(data) do
-      post("/post", data, headers: [{MimeType.content, MimeType.json}])
-    end
-
-    def document_create(:jpeg, slug, data) do
-      post("/documents/" <> slug, data, headers: [{MimeType.content, MimeType.jpeg}])
-    end
-  end
-
-  @moduletag :capture_log
+  # @moduletag :capture_log
 
   @test_json '{\"data\": \"Hello World\"}'
 
@@ -42,10 +23,11 @@ defmodule SimpleServerTest do
   end
 
   test "POST documents request with doc" do
-    file = "static/You_Must_Be_New.jpg"
+    file = "test/static/You_Must_Be_New.jpg"
     slug = "you-must-be-new"
-    {:ok, response} = ServerClient.document_create(:jpeg, slug, file)
+    {:ok, file_data} = File.read(file)
+    {:ok, response} = ServerClient.document_create(:jpeg, slug, file_data)
     assert response.status == 201
-    assert List.keyfind(response.headers, MimeType.content, 0) ==  {MimeType.content, MimeType.json}
+    assert List.keyfind(response.headers, MimeType.content, 0) ==  {MimeType.content, MimeType.text}
   end
 end

@@ -20,7 +20,8 @@ defmodule SimpleServer.MixProject do
 
   defp deps do
     [
-      {:tesla, "~> 1.2.1", only: :test}
+      {:hackney, "~> 1.14.0"},
+      {:tesla, "~> 1.2.1"}
     ]
   end
 end
