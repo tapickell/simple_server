@@ -12,7 +12,8 @@ defmodule SimpleServer.Application do
       {Task.Supervisor, name: SimpleServer.TaskSupervisor},
       Supervisor.child_spec({Task, fn -> SimpleServer.WebServer.accept(port) end},
         restart: :permanent
-      )
+      ),
+      FileService.Store.child_spec(name: :docs)
     ]
 
     opts = [strategy: :one_for_one, name: SimpleServer.Supervisor]
