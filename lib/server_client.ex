@@ -17,4 +17,12 @@ defmodule SimpleServer.ServerClient do
   def document_create(:jpeg, slug, data) do
     post("/documents/" <> slug, data, headers: [{MimeType.content, MimeType.jpeg}])
   end
+
+  def document_get(slug) do
+    get("/documents/" <> slug)
+  end
+
+  def document_delete(slug) do
+    delete("/documents/" <> slug)
+  end
 end

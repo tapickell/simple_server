@@ -35,7 +35,7 @@ defmodule FileService.Store do
     end
   end
 
-  def handle_call({:lookup, key}, %{store: store} = state) do
+  def handle_call({:lookup, key}, {_pid, _ref}, %{store: store} = state) do
     case :ets.lookup(store, key) do
       [match | _] ->
         {:reply, {:ok, match}, state}
@@ -44,7 +44,7 @@ defmodule FileService.Store do
     end
   end
 
-  def handle_call({:delete, key}, %{store: store} = state) do
+  def handle_call({:delete, key}, {_pid, _ref}, %{store: store} = state) do
     case :ets.delete(store, key) do
       true ->
         {:reply, :ok, state}

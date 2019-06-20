@@ -9,10 +9,14 @@ defmodule SimpleServer.ResponseBuilder do
     Date: #{DateTime.utc_now() |> DateTime.to_iso8601()}\r
     Access-Control-Allow-Origin: *\r
     Access-Control-Allow-Credentials: true\r
-    \r\n#{body}
+    \r\n#{body_string(body)}
     """
   end
 
   defp body_length(n) when is_list(n), do: List.to_string(n) |> body_length
   defp body_length(n) when is_binary(n), do: byte_size(n) + 1
+  defp body_length(n) when is_tuple(n), do: tuple_size(n) + 1
+
+  defp body_string(n) when is_binary(n), do: n
+  defp body_string(n), do: inspect(n)
 end
