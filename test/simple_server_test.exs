@@ -28,6 +28,6 @@ defmodule SimpleServerTest do
     {:ok, file_data} = File.read(file)
     {:ok, response} = ServerClient.document_create(:jpeg, slug, file_data)
     assert response.status == 201
-    assert List.keyfind(response.headers, MimeType.content, 0) ==  {MimeType.content, MimeType.text}
+    assert List.keyfind(response.headers, MimeType.content, 0) ==  {MimeType.content, MimeType.json}
   end
 end

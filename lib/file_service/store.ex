@@ -1,6 +1,8 @@
 defmodule FileService.Store do
   use GenServer
 
+  require Logger
+
   def start_link(opts) do
     table = Keyword.fetch!(opts, :name)
     GenServer.start_link(__MODULE__, table, name: __MODULE__)
@@ -23,7 +25,8 @@ defmodule FileService.Store do
     {:ok, %{store: store}}
   end
 
-  def handle_call({:insert, key, type, data}, %{store: store} = state) do
+  # TODO this rcvd an extra tuple of {pid, ref} not sure why
+  def handle_call({:insert, key, type, data}, {_pid, _ref}, %{store: store} = state) do
     case :ets.insert(store, {key, type, data}) do
       true ->
         {:reply, :ok, state}
@@ -48,5 +51,13 @@ defmodule FileService.Store do
       _ ->
         {:reply, :error, state}
     end
+  end
+
+  def handle_call(missed, other, state) do
+    Logger.error("HANDLE CALL MISS")
+    Logger.error("Missed: #{inspect(missed)}")
+    Logger.error("Other: #{inspect(other)}")
+    Logger.error("State: #{inspect(state)}")
+    {:reply, :ok, state}
   end
 end

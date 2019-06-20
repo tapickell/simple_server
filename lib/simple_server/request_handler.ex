@@ -20,7 +20,7 @@ defmodule SimpleServer.RequestHandler do
     {:ok, ResponseBuilder.build({200, @ok, MimeType.text, response})}
   end
 
-  defp route('/documents' ++ doc_slug, :POST, conn) do
+  defp route('/documents' ++ '/' ++ doc_slug, :POST, conn) do
     case Document.store(doc_slug, conn.content_type, conn.body) do
       {:ok, response} ->
         {:ok, ResponseBuilder.build({201, @created, MimeType.json, response})}
@@ -30,8 +30,7 @@ defmodule SimpleServer.RequestHandler do
   end
 
   defp route('/post', :POST, conn) do
-    response = "{}"
-    {:ok, ResponseBuilder.build({201, @created, MimeType.json, response})}
+    {:ok, ResponseBuilder.build({201, @created, MimeType.json, @empty_obj})}
   end
 
   defp route(path, action, conn) do
