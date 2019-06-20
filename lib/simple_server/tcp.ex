@@ -24,14 +24,31 @@ defmodule SimpleServer.Tcp do
     which builds up a Conn struct from each part of the header that comes in. When all the
     header packets have been received then I set complete to true in the Conn struct.
     When eoh end of header is received if the content length is greater than 0
-    I then get the raw body data. This is a little messy still as I am making a call into
+    I then get the raw body data.
+    Then the completed Conn struct is sent off to the request handler for processing.
+    This waits for response and then sends the response back with Tcp.write_line
+    Then the serve function is called recursively again. It seems like if processing
+    takes a while it could block processing incoming requests.
+    I am not sure if the response needs to be written out serially like this or not.
+    Maybe it will but the magic that happens is when we have many parallel acceptors receiving
+    and replying to requests.
+
+    * DONE - This is a little messy still as I am making a call into
     TCP to get that raw body data from the request building line parser functions.
     The line parser / request builder should not know how to ask for more data it should only know how
     to parse the lines that come in.
+      * Resolved by moving the logic to fetching the raw body to the web_server and having the
+      request builder just return header_complete: true when content length is > 0
+
+    ## AB Testing
+    Trying to AB test it seems like one request goes through then no more and AB times out
+    Not sure why, I may be doing something wrong. With Curl I can run multiples and it seems to close
+    cleanly and in test I run multiple requests back to back.
 
     ## Non Blocking Implmentation
-    For non blocking the listener become a GenServer and then a Supervisor is used for the
-    clients (acceptors), that are spun up and will receive actively with handle calls.
+    * TODO For non blocking the listener become a GenServer
+    * TODO a Supervisor is used for the clients (acceptors)
+    * TODO Acceptors are able to actively receive connections and respond
   """
 
   require Logger
