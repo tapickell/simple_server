@@ -1,27 +1,44 @@
 * Simple Server
 ** DONE Accept requests on port ??
    CLOSED: [2019-06-16 Sun 08:43]
-** TODO Handle routing for endpoints
+** DONE Handle routing for endpoints
+   CLOSED: [2019-06-20 Thu 00:03]
 *** DONE hello_world endpoint
     CLOSED: [2019-06-16 Sun 19:32]
-*** TODO documents endpoint
+*** DONE documents endpoint
+    CLOSED: [2019-06-20 Thu 00:03]
 **** Path ends with the document slug (e.g., /documents/my-document)
-** TODO Handle actions on paths
-*** TODO GET
-**** TODO Fetches the document
-**** TODO Returns the document in the response body
-**** TODO Returns the content-type of the document
-*** TODO POST
-**** TODO Stores the document
-**** TODO Stores a URI slug for the document that is provided in the URI path
-**** TODO Stores the content-type of the document
-**** TODO Stores the document in memory
-*** TODO DELETE
-**** TODO deletes the document
-** TODO Testing
-*** TODO Curl GET hello_world returns "Hello World"
+** DONE Handle actions on paths
+   CLOSED: [2019-06-20 Thu 00:02]
+*** DONE GET
+    CLOSED: [2019-06-20 Thu 00:02]
+**** DONE Fetches the document
+     CLOSED: [2019-06-20 Thu 00:02]
+**** DONE Returns the document in the response body
+     CLOSED: [2019-06-20 Thu 00:02]
+**** DONE Returns the content-type of the document
+     CLOSED: [2019-06-20 Thu 00:02]
+*** DONE POST
+    CLOSED: [2019-06-20 Thu 00:02]
+**** DONE Stores the document
+     CLOSED: [2019-06-20 Thu 00:02]
+**** DONE Stores a URI slug for the document that is provided in the URI path
+     CLOSED: [2019-06-20 Thu 00:02]
+**** DONE Stores the content-type of the document
+     CLOSED: [2019-06-20 Thu 00:02]
+**** DONE Stores the document in memory
+     CLOSED: [2019-06-20 Thu 00:02]
+*** DONE DELETE
+    CLOSED: [2019-06-20 Thu 00:02]
+**** DONE deletes the document
+     CLOSED: [2019-06-20 Thu 00:02]
+** DONE Testing
+   CLOSED: [2019-06-20 Thu 00:03]
+*** DONE Curl GET hello_world returns "Hello World"
+    CLOSED: [2019-06-20 Thu 00:02]
 
-*** TODO Curl json examples
+*** DONE Curl json examples
+    CLOSED: [2019-06-20 Thu 00:02]
 *** curl -v -H 'Content-Type: application/json' "http://localhost:4040/post" -d '{"data": "Heya"}'
 **** DONE Match on the messages to create request data structure
      CLOSED: [2019-06-16 Sun 08:42]
@@ -36,4 +53,5 @@
 09:00:51.662 [warn]  read_line => {:http_header, 42, :"Content-Type", :undefined, 'application/json'}
 09:00:51.662 [warn]  read_line => {:http_header, 38, :"Content-Length", :undefined, '16'}
 09:00:51.662 [warn]  read_line => :http_eoh
-**** TODO Handle content types, using them to determine how to process body
+**** DONE Handle content types, using them to determine how to process body
+     CLOSED: [2019-06-20 Thu 00:03]
