@@ -12,6 +12,8 @@ defmodule SimpleServer.WebServer do
     loop(socket)
   end
 
+  # TODO - this became a mess when troubleshooting httpc calls
+  # clean this up and make it readable and sane
   defp loop(socket) do
     Logger.info("Loop called in WebServer")
     with {:ok, client} <- Tcp.accept(socket) do
@@ -27,6 +29,14 @@ defmodule SimpleServer.WebServer do
     end
 
     loop(socket)
+  end
+
+  defp serve(socket, %{header_complete: true, complete: false} = conn) do
+    Logger.info("serve called with %{complete: true} in conn")
+    size = conn.content_length
+    with {:ok, %{data: data}} <- Tcp.read_raw_data(socket, size) do
+      serve(socket, %{conn | body: data, complete: true})
+    end
   end
 
   defp serve(socket, %{complete: true} = conn) do

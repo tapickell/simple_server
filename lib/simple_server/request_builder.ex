@@ -47,13 +47,7 @@ defmodule SimpleServer.RequestBuilder do
 
   def parse_line(socket, conn, :http_eoh) do
     Logger.warn("end of header => #{inspect(conn)}")
-    size = conn.content_length
-    with {:ok, %{data: data}} <- Tcp.read_raw_data(socket, size) do
-      {:ok, %{conn | body: data, complete: true}}
-    else
-      {:error, error} ->
-        {:ok, %{conn | errors: [error | conn.errors]}}
-    end
+    {:ok, %{conn | header_complete: true}}
   end
 
   def parse_line(_, conn, data) do

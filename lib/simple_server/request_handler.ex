@@ -59,6 +59,7 @@ defmodule SimpleServer.RequestHandler do
   end
 
   # View Layer concerns with JSON
+  # TODO this could live somewhere else
   defp error_json(msg) do
     "{\"error\": \"#{msg}\"}"
   end
